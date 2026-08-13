@@ -4,12 +4,11 @@ A transformer implemented **from scratch in PyTorch**, with hand-written **Trito
 kernels** benchmarked and validated against the PyTorch implementation. The
 end goal is to train it on protein sequences in the style of
 [ESM-2](https://www.science.org/doi/10.1126/science.ade2574) (masked language
-modeling over an amino-acid alphabet) — but the first milestone is a correct,
-well-tested transformer core.
+modeling over an amino-acid alphabet).
 
 ## Project status
 
-Milestone 1 (current): from-scratch transformer + Triton kernels, each checked
+Milestone 1 (current): Triton kernels, each checked
 for numerical parity against PyTorch's official implementation.
 
 - ✅ `gelu`, scaled dot-product attention (`esm_fast.functional`)

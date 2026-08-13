@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "esm-fast"
+version = "0.0.1"
+description = "A transformer built from scratch in PyTorch with hand-written Triton kernels, aimed at ESM-2 style protein masked language modeling."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Nima" }]
+dependencies = [
+    "torch>=2.1",
+    "numpy>=1.24",
+]
+
+[project.optional-dependencies]
+# Triton only ships usable wheels on Linux + CUDA. Keep it out of the core deps
+# so the package installs and the correctness tests run on macOS/CPU.
+gpu = ["triton>=2.1"]
+dev = [
+    "pytest>=8.0",
+    "pytest-xdist>=3.5",
+    "ruff>=0.4",
+    "mypy>=1.9",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-rA"
+markers = [
+    "gpu: tests that require a CUDA device and Triton (skipped on CPU-only machines)",
+    "slow: longer-running tests",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "UP", "B", "SIM"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.10"
+packages = ["esm_fast"]
+ignore_missing_imports = true
+disallow_untyped_defs = false

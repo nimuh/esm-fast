@@ -18,6 +18,23 @@ for numerical parity against PyTorch's official implementation.
 - ✅ Triton fused `softmax` and `layer_norm` kernels (`esm_fast.kernels`)
 - ⏳ Rotary embeddings, ESM-2 masked-LM head, tokenizer, training loop
 
+### Triton kernels planned
+
+Stub modules exist in `src/esm_fast/kernels/`; each still needs the kernel plus a
+parity test against the PyTorch op it replaces.
+
+- [ ] `matmul.py` — tiled blocked GEMM, parity vs. `torch.matmul`
+- [ ] `layer_norm_bwd.py` — backward pass for the fused `layer_norm` kernel
+      (dx / dweight / dbias), parity vs. autograd through `F.layer_norm`
+- [ ] `fused_bias_gelu.py` — bias add + GELU in one pass, parity vs.
+      `F.gelu(x + bias)` (used by `FeedForward`)
+- [ ] `fused_res_dropout_layernorm.py` — residual add + dropout + LayerNorm
+      fused, parity vs. the eager chain (dropout compared with `p=0` / fixed seed)
+- [ ] `rope.py` — rotary position embeddings applied to q/k, parity vs. the
+      reference implementation in `esm_fast.functional`
+- [ ] `fused_attention.py` — FlashAttention-style fused SDPA, parity vs.
+      `F.scaled_dot_product_attention`
+
 ## Layout
 
 ```
